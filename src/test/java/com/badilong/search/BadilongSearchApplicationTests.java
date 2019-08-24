@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -57,12 +58,12 @@ public class BadilongSearchApplicationTests {
 		 list.forEach(item->{System.out.println("--title--"+item.getTitle()+"--price--"+item.getPrice());});
 	}
 	
-	@Test
+	//@Test
 	public void search() {		
 		//构建基本查询条件
 		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();		
 		//添加基本分词查询
-		queryBuilder.withQuery(QueryBuilders.matchQuery("title","小米手机"));
+		queryBuilder.withQuery(QueryBuilders.matchQuery("title","手机"));
 		// 搜索结果
 		Page<Item> items = itemRepository.search(queryBuilder.build());
 		// 总条数
@@ -73,6 +74,28 @@ public class BadilongSearchApplicationTests {
 	    }		
 	}
 	
-	
-
+	@Test
+	public void searchByPage() {
+		NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+		queryBuilder.withQuery(QueryBuilders.matchQuery("title", "手机"));
+		// 分页：
+	    int page = 0;
+	    int size = 2;
+	    queryBuilder.withPageable(PageRequest.of(page,size));
+	   // 搜索，获取结果
+	    Page<Item> items = itemRepository.search(queryBuilder.build());
+	    // 总条数
+	    long total = items.getTotalElements();
+	    System.out.println("总条数 = " + total);
+	    // 总页数
+	    System.out.println("总页数 = " + items.getTotalPages());
+	    // 当前页
+	    System.out.println("当前页：" + items.getNumber());
+	    // 每页大小
+	    System.out.println("每页大小：" + items.getSize());
+	    for (Item item : items) {
+	        System.out.println("======"+item.getTitle());
+	    }
+	    
+	}
 }
