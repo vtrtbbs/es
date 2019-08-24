@@ -8,6 +8,13 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
 @Document(indexName = "item",type = "docs", shards = 1, replicas = 0)
 public class Item implements Serializable{
 
